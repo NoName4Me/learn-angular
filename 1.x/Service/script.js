@@ -3,7 +3,7 @@ angular.module('myServiceModule', [])
     $scope.callNotify = function(msg) {
       notify(msg);
     };
-  }]) // 
+  }]) // *Note*  you are not registering a service instance, but a factory function that will create this instance when called.
   .factory('notify', ['$window', function(win) {
     var msgs = [];
     return function(msg) {
