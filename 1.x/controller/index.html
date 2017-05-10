@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style rel="stylesheet/scss">
+    div.level {
+      padding: 10px;
+    }
+    .lv1{
+      border: solid 2px cyan;
+    }
+    .lv2 {
+      border: solid 2px orange;
+    }
+    .lv3 {
+      border: solid 2px brown;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <script src="script.js"></script>
+</head>
+
+<body ng-app='myApp'>
+  <div ng-controller='DoubleController'>
+    Two times <input ng-model='num' type='number' placeholder="0"> equals {{ double(num) }}
+  </div>
+  <hr>
+  <div ng-controller='SpicyController'>
+    <input ng-model='customSpice'>
+    <button ng-click="spicy('chili')">Chili</button>
+    <button ng-click="spicy(customSpice)">Custom spice</button>
+    <p> The food is {{spice}} spicy! </p>
+  </div>
+  <hr>
+  <div ng-controller='Lv1Controller' class='level lv1'>
+    <p>This is level {{lv.id}}, named {{lv.name}}!</p>
+    <div ng-controller='Lv2Controller'  class='level lv2'>
+      <p>This is level {{lv.id}}, named {{lv.name}}!</p>
+      <div ng-controller='Lv3Controller'  class='level lv3'>
+        <p>This is level {{lv.id}}, named {{lv.name}}!</p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
