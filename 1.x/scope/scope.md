@@ -16,7 +16,7 @@
 
 4.变化监测
 
-在`$apply`结束时，AngularJS会在根作用域执行`$digest`循环（遍历所有的子作用域）。在`$digest`循环中，所有的被`$watch`的表达式或者函数都会做模型变化检查，如果有变化，`$watch`监听器会被调用。
+在`$apply`结束时，AngularJS会在根作用域执行`$digest`循环（遍历所有的子作用域）。在`$digest`周期内，所有的被`$watch`的表达式或者函数都会做模型变化检查，如果有变化，`$watch`监听器会被调用。
 
 ## 作用域和指令
 
@@ -51,3 +51,64 @@
 * 通过集合内容（`scope.$watchCollection(watchExpression, listener)`）能检测数组或对象内部的改变（元素增、删、重排等）。这种检测是浅层次的，它不会继续检测嵌套集合，它比引用观测更昂贵，因为它要额外维护这个集合的拷贝。
 
 * 通过值（`scope.$watch(watchExpression, listener, true)`）检测任何嵌套数据结构的改变，它是最强大的改变检测策略，但也是代价最昂贵的，因为它要在每一个`digest`中遍历某个嵌套数据结构，并且在内存中维护一个完整拷贝。
+
+## 与浏览器事件循环集成
+![concepts-runtime](concepts-runtime.png)
+一般的事件处理是：
+1. 浏览器事件循环等待事件到来，事件是指用户交互、定时事件、网络事件（服务器响应）
+
+2. 事件的回调被执行，这会进入到JS的上下文，回调可以修改DOM结构。
+
+3. 当回调执行完，浏览器离开JS上下文，根据DOM的变动重渲染视图。
+
+
+AngularJS通过提供自己的事件处理循环，将JS的工作流划分出AngularJS上下文，只有在其上下文内的操作才会具备数据绑定的能力。
+
+1. 通过调用`scope.$apply(stimulusFn)`进入AngularJS上下文，`stimulusFn`是你希望在AngularJS上下文中完成的工作。
+
+2.AngularJS执行`stimulusFn()`，一般会修改应用状态。
+
+3.AngularJS进入`$digest`循环，该循环由两个更小的循环构成，一个处理`$evalAsync`队列，一个处理`$watch`序列。`$digest`循环一直迭代，直到模型稳定，即`$evalAsync`队列为空，`$watch`序列没有检测到变化。
+
+4.`$evalAsync`队列是用来安排需要出现在当前堆栈帧外且在浏览器视图渲染之前的任务。一般通过`setTimeout(0)`完成，但是`setTimeout(0)`会很慢，而且可能会出现闪屏（因为浏览器渲染视图总是在每一个事件之后）。
+
+5.`$watch`序列是一个表达式的集合，这些表达式可能在上一个迭代里变化了，如果检测到变化，`$watch`函数会被调用，然后会使用新值来更新DOM。
+
+6.当AngularJS的`$digest`循环完成，执行会离开AngularJS和JS上下文，然后进行浏览器对DOM的重渲染，从而展示出变化。
+
+下面解释一下hello world示例中是如何实现用户输入文字时的数据绑定：
+```html
+<!-- index.html -->
+<div ng-controller="MyController">
+  Your name:
+    <input type="text" ng-model="username">
+    <button ng-click='sayHello()'>greet</button>
+  <hr>
+  {{greeting}}
+</div>
+```
+
+```js
+// script.js
+angular.module('scopeExample', [])
+.controller('MyController', ['$scope', function($scope) {
+  $scope.username = 'World';
+
+  $scope.sayHello = function() {
+    $scope.greeting = 'Hello ' + $scope.username + '!';
+  };
+}]);
+```
+
+1.编译阶段：
+  a.`ng-model`和`input`指令在`<input>`元素上创建了一个`keydown`监听器。
+  b.`interpolation`创建一个在`name`被修改时被通知的`$watch`。
+
+2.运行时：
+  a.比如按下了键盘`x`，浏览器会在`input`元素上触发一个`keydown`事件。
+  b.`input`指令捕获输入的值的变化，然后调用`$apply('name = "x";')`在AngularJS运行上下文中更新应用模型。
+  c.AngularJS将`name = 'x';`应用到模型上。
+  d.`$digest`循环启动。
+  e.`$watch`序列检测`name`属性的变化，然后通知`interpolation`，它会更新DOM。
+  f.AngularJS离开执行上下文，从而退出`keydown`事件，退出JS执行上下文。
+  g.浏览器使用更新后的文本重渲染视图。
