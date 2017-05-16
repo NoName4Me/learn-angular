@@ -11,7 +11,7 @@ Data-binding in AngularJS apps is the automatic synchronization of data between 
 
 Most templating systems bind data in only one direction: they merge template and model components together into a view. After the merge occurs, changes to the model or related sections of the view are NOT automatically reflected in the view. Worse, any changes that the user makes to the view are not reflected in the model. This means that the developer has to write code that constantly syncs the view with the model and the model with the view.
 
-![Two_Way_Data_Binding](One_Way_Data_Binding.png)
+![Two_Way_Data_Binding](Two_Way_Data_Binding.png)
 
 *Data Binding in AngularJS Templates*
 
