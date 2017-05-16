@@ -46,6 +46,7 @@
 脏检查有三种策略：通过引用、通过集合内容、通过值，这三种策略的不同在于它们检测的变化类型和它们的运行特性，三种策略如下图示：
 
 ![concepts-scope-watch-strategies](concepts-scope-watch-strategies.png)
+
 * 通过引用（`scope.$watch(watchExpression, listener)`）观测表达式的返回值是否被赋了新值，如果值是数组或者对象，那么内部的改变不会被检测，这是最高效的策略。
 
 * 通过集合内容（`scope.$watchCollection(watchExpression, listener)`）能检测数组或对象内部的改变（元素增、删、重排等）。这种检测是浅层次的，它不会继续检测嵌套集合，它比引用观测更昂贵，因为它要额外维护这个集合的拷贝。
@@ -53,7 +54,9 @@
 * 通过值（`scope.$watch(watchExpression, listener, true)`）检测任何嵌套数据结构的改变，它是最强大的改变检测策略，但也是代价最昂贵的，因为它要在每一个`digest`中遍历某个嵌套数据结构，并且在内存中维护一个完整拷贝。
 
 ## 与浏览器事件循环集成
+
 ![concepts-runtime](concepts-runtime.png)
+
 一般的事件处理是：
 1. 浏览器事件循环等待事件到来，事件是指用户交互、定时事件、网络事件（服务器响应）
 
