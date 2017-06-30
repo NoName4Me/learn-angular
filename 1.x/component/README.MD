@@ -1,6 +1,6 @@
 # Component
 
-define
+* define
 ```js
 angular.module('myApp').component('iconTextList', {
     template:
@@ -14,11 +14,12 @@ angular.module('myApp').component('iconTextList', {
 });
 ```
 
-html use
-```
+* html tag
+```html
+<!-- by iconTextList -->
 <icon-text-list></icon-text-list>
 ```
 
-an example:
+* result
 
 <img src="imgs/preview.png" width="480" alt="preivew">
