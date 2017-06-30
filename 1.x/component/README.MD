@@ -2,4 +2,4 @@
 
 an example:
 
-![preview.png](imgs/preview.png)
+<img src="imgs/preview.png" width="480" alt="preivew">
