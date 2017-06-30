@@ -1,0 +1,17 @@
+li {
+    list-style: none;
+}
+
+.icon-text-div li {
+    margin-bottom: 40px;
+    border-bottom: 1px solid rgba(0, 0, 0, .6);
+}
+
+.icon-text-div span {
+    font-size: 2em;
+    color: #dd99aa;
+    height: 64px;
+    line-height: 64px;
+    vertical-align: text-bottom;
+    padding-left: 20px;
+}
