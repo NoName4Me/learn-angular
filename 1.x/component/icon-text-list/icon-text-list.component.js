@@ -1,9 +1,9 @@
 'use strict';
 
 angular.
-  module('myApp').
+  module('iconTextList'). // use this for code reuse
   component('iconTextList', {
-    template:
+    /*template:
         `<ul>
           <li ng-repeat="element in $ctrl.list">
             <img src="{{element.url}}" value="{{element.name}}"></img>
@@ -11,6 +11,8 @@ angular.
             <p>{{element.description}}</p>
           </li>
         </ul>`,
+        */
+        templateUrl: 'icon-text-list.template.html',
     controller: function IconTextListController() {
       this.list = [
         {
