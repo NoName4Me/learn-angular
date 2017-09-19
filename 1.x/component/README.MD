@@ -23,3 +23,7 @@ angular.module('myApp').component('iconTextList', {
 * result
 
 <img src="imgs/preview.png" width="480" alt="preivew">
+
+## about cahce
+
+[$templateCache](https://docs.angularjs.org/api/ng/service/$templateCache)

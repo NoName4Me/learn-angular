@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+
+</head>
+
+<body ng-app="mModule">
+    <!-- STEP.1 -->
+    <!--
+    <div ng-controller="mCtrl">
+        <j-person></j-person>
+        <div j-person></div>
+    </div>
+    -->
+    <!-- STEP.2 restrict -->
+    <!--
+    <div ng-controller="mCtrl">
+        <j-person></j-person>
+        <div j-person></div>
+    </div>
+    -->
+
+    <!-- STEP.3 attr -->
+    <!--
+    <div ng-controller="mCtrl">
+        <j-person type="person1"></j-person>
+        <j-person type="person2"></j-person>
+    </div>
+    -->
+    <!-- STEP.5 isolate scope -->
+    <!--
+    <div ng-controller="mCtrl">
+        <j-person bind-person="person1"></j-person>
+        <j-person type="person2"></j-person>
+    </div>
+    -->
+
+    <!-- STEP.6 link -->
+    <div ng-controller="mCtrl">
+            Date format: <input ng-model="format"> <hr/>
+            Current time is: <span j-current-time="format"></span>
+          </div>
+    <script src="./script.js"></script>
+</body>
+
+</html>
