@@ -42,10 +42,22 @@
     -->
 
     <!-- STEP.6 link -->
+    <!--
     <div ng-controller="mCtrl">
-            Date format: <input ng-model="format"> <hr/>
-            Current time is: <span j-current-time="format"></span>
-          </div>
+        Date format: <input ng-model="format"> <hr/>
+        Current time is: <span j-current-time="format"></span>
+        </div>
+    -->
+
+    <!-- STEP.7 transclude -->
+    <div ng-controller="mCtrl">
+        <j-person>
+            <hr>
+            <h4>This is in transclude</h4>
+            <input id="person" type="checkbox">
+            <label for="person"><strong  ng-bind="person.name"></strong></label>
+        </j-person>
+    </div>
     <script src="./script.js"></script>
 </body>
 
