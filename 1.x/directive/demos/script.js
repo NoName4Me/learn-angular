@@ -114,7 +114,7 @@
  //*/
 
  // STEP.7 tranclude
- 
+ /*
  angular.module('mModule', []).controller('mCtrl', ['$scope', function($scope) {
      $scope.person = {
          name: 'jonge',
@@ -132,4 +132,52 @@
          // that div.ng-transclude means all things in it will be shown on page
      }
  });
+ //*/
+
+ // STEP.8 drag test
+ angular.module('mModule', [])
+ .directive('jDrag', ['$document', function($document) {
+   return {
+     link: function(scope, element, attr) {
+       var startX = 0, startY = 0, x = 100, y = 0;
+ 
+       element.css({
+        position: 'relative',
+        left: '100px',
+        width: '120px',
+        height: '120px',
+        border: '2px solid #A85',
+        backgroundColor: '#58D',
+        borderRadius: '60px',
+        display: 'inline-block',
+        textAlign: 'center',
+        cursor: 'pointer'
+       });
+ 
+       element.on('mousedown', function(event) {
+         // Prevent default dragging of selected content
+         event.preventDefault();
+         startX = event.pageX - x;
+         startY = event.pageY - y;
+         $document.on('mousemove', mousemove);
+         $document.on('mouseup', mouseup);
+       });
+ 
+       function mousemove(event) {
+         y = event.pageY - startY;
+         x = event.pageX - startX;
+         element.css({
+           top: y + 'px',
+           left:  x + 'px'
+         });
+       }
+ 
+       function mouseup() {
+         $document.off('mousemove', mousemove);
+         $document.off('mouseup', mouseup);
+       }
+     }
+   };
+ }]);
+ 
  //*/

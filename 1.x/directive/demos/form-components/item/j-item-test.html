@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+    <style>
+        .disp-block {
+            display: block!important;
+        }
+        .required:before {
+            content: '*';
+            display:inline-block;
+            width: 8px;
+            color: red;
+        }
+    </style>
+</head>
+
+<body ng-app="mModule">
+    <div ng-controller="mCtrl">
+        <j-item options='itemOptions1'>
+            <input id="person" type="checkbox">
+            <label for="person"><strong  ng-bind="person.name"></strong></label>
+        </j-item>
+        <hr>
+        <h2>ng-repeat</h2>
+        <j-item ng-repeat="item in items" options='item'>
+            <select ng-if="item.type==='select'">
+                <option value ="volvo">Volvo</option>
+                <option value ="saab">Saab</option>
+                <option value="opel">Opel</option>
+                <option value="audi">Audi</option>
+            </select>
+            <input ng-if="item.type==='text'" type="text" placeholder="input sth." style="height:32px;width:120px;">
+            <textarea ng-if="item.type==='textarea'" placeholder="input sth."></textarea>
+        </j-item>
+    </div>
+    <script src="./jItem.js"></script>
+</body>
+
+</html>
