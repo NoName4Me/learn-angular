@@ -26,9 +26,8 @@
         <div class="right-panel">
             <div class="canvas-container" ng-controller="mCtrl">
                 <!-- this is the svg view, the true svg canvas is infinite -->
-                <svg width="100%" height="100%">
+                <svg id="canvas" width="100%" height="100%">
                     <defs>
-
                         <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="strokeWidth">
                             <path d="M0,0 L0,8 L10,4 Z" fill="#3A9"></path>
                         </marker>
@@ -36,59 +35,36 @@
                             <polygon points="0,0 4,4 0,8 12,4 0,0" fill="#3A9" stroke="none"></polygon>
                         </marker>
                         <marker id="arrow2" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto" markerUnits="userSpaceOnUse">
-                                <polygon points="0,0 4,4 0,8 12,4 0,0" fill="#3A9" stroke="none"></polygon>
-                            </marker>
+                            <polygon points="0,0 4,4 0,8 12,4 0,0" fill="none" stroke="none"></polygon>
+                        </marker>
                         <marker id="point" markerWidth="10" markerHeight="10" refX="0" refY="0" orient="auto" markerUnits="strokeWidth">
                             <circle cx="0" cy="0" r="5" stroke="#3D9" fill="#3A9"></circle>
                         </marker>
                         <circle id="source" cursor="pointer" cx="0" cy="0" r="30" fill="#5D8"></circle>
                         <polygon id="activity" cursor="pointer" points="-30,0 -15,25.98 15,25.98 30,0 15,-25.98 -15,-25.98" fill="#58D"></polygon>
-                        <g id="anchor" class="anchor" x="0" y="0">
-                            <circle cx="0" cy="0" r="10" fill="none" stroke="none" ng-click="anchorClick"></circle>
+                        <g id="anchor" class="anchor" x="0" y="0" cursor="crosshair">
+                            <circle cx="0" cy="0" r="10" fill="none" stroke="none"></circle>
                             <path d="M0,-6 A3,3 0 0,1 0,0 A3,3 0 0,0 0,6" fill="none" stroke="none"></path>
                         </g>
                     </defs>
-                    
+
                     <use x="123" y="111" xlink:href="#source" width="60" ng-dblclick="dblclick"></use>
                     <use x="123" y="141" xlink:href="#anchor"></use>
-                    <path d="M300,200 A20,20 0 0,1 300,160" fill="red" stroke="blue" stroke-width="5" />
+                    <g ng-repeat="line in lines" class="line" ng-mousedown="lineMouseDown($event,line)">
+                        <path class="true-line" ng-attr-d="{{line.d}}" marker-end="url(#arrow1)" stroke="#666" stroke-width="2px"></path>
+                        <path class="padding-line" ng-attr-d="{{line.d}}" fill="none" marker-end="url(#arrow2)"></path>
+                    </g>
+                    <g ng-repeat="process in processArr" id="{{process.name}}">
+                        <circle ng-attr-cx="{{process.position.x}}" ng-attr-cy="{{process.position.y}}" r="25" fill="#3A9" stroke="none"></circle>
+                        <image ng-attr-x="{{process.position.x-30}}" ng-attr-y="{{process.position.y-30}}" width="60" xlink:href="" ng-href="{{process.type}}.svg"
+                            ng-mousedown="processMouseDown($event,process)" cursor="pointer" ng-mouseenter="processMouseEnter($event,process)"
+                            ng-mouseleave="processMouseLeave($event, process)" />
+                        <use ng-attr-x="{{process.position.x}}" ng-attr-y="{{process.position.y+30}}" xlink:href="#anchor" ng-click="anchorClick($event, process)"></use>
 
-                    <use x="180" y="291" xlink:href="#activity" width="60"></use>
-                    <use x="378" y="171" xlink:href="#activity" width="60"></use>
-                    <use x="470" y="234" xlink:href="#source" width="60"></use>
-                    <g class="line" ng-click="lineClick($event)">
-                        <path id="path" class="true-line" ng-attr-d="{{d}}" marker-end="url(#arrow1)" stroke="#666" stroke-width="2px"></path>
-                        <path id="path" class="padding-line" ng-attr-d="{{d}}" fill="none" marker-end="url(#arrow2)"></path>
                     </g>
-                    <!--
-                    <defs>
-                        <g id="dataSource" class="process mouse-out" onmouseover="processMouseOver(this)" onmouseleave="processMouseOut(this)">
-                            <circle cx="0" cy="0" r="20" stroke="#39D" fill="#3A9"></circle>
-                            <circle class="acher-hide" cx="0" cy="-20" r="8" stroke="#399" fill="#3DD"></circle>
-                            <circle class="acher" cx="20" cy="0" r="8" stroke="#399" fill="#3DD"></circle>
-                            <circle class="acher-hide" cx="0" cy="20" r="8" stroke="#399" fill="#3DD"></circle>
-                            <circle class="acher-hide" cx="-20" cy="0" r="8" stroke="#399" fill="#3DD"></circle>
-                        </g>
-                        <g id="activity" class="process mouse-out" onmouseover="processMouseOver(this)" onmouseleave="processMouseOut(this)">
-                            <rect x="0" y="0" width="40" height="40" rx="4" ry="4" stroke="#3A9" fill="#39D"></rect>
-                            <circle class="acher-hide" cx="20" cy="0" r="8" stroke="#399" fill="#3DD"></circle>
-                            <circle class="acher-hide" cx="40" cy="20" r="8" stroke="#399" fill="#3DD"></circle>
-                            <circle class="acher-hide" cx="20" cy="40" r="8" stroke="#399" fill="#3DD"></circle>
-                            <circle class="acher-hide" cx="0" cy="20" r="8" stroke="#399" fill="#3DD"></circle>
-                        </g>
-                    
-                    </defs>
-                
-                    <g>
-                        <path d="M120,100 Q300,150 400,220" marker-end="url(#arrow)" fill="none" stroke="#666" stroke-width="2px" />
-                        <use x="100" y="100" xlink:href="#dataSource" stroke-width="2px" />
-                        <use x="400" y="200" xlink:href="#activity" stroke-width="2px" />
-                    </g>
-                
-                    <g ng-repeat="process in processArr" j-drag-svg item="process">
-                        <use xlink:href="dws.svg#Layer_2" width="60px" height="60px" ng-attr-x="{{process.position.x}}" ng-attr-y="{{process.position.y}}"></use>
-                    </g>
--->
+                    <!-- <path id="drawLine" ng-attr-d="{{drawingLine.d}}" stroke="green" marker-end="url(#arrow1)"></path> -->
+                    <path id="drawLine" d="" stroke-dasharray="4, 4" stroke="rgba(0,0,0,.4)" fill="rgb(0,0,0)" stroke-width="2px" marker-end="url(#arrow1)"></path>
+
                 </svg>
             </div>
             <div class="config-panel"></div>
