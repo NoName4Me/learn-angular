@@ -3,10 +3,40 @@
    $scope.dblclick = function($event) {
 
    };
+   var threshold = 2;
+
    $document.on('mousewheel', function(event) {
+     var dY = event.deltaY;
+     var canvas = document.querySelector("#canvas");
+     var viewBox = canvas.getAttribute("viewBox") ? angular.forEach(canvas.getAttribute("viewBox").split(" "), function(value) {
+       Number.parseFloat = Number.parseFloat || parseFloat;
+       value = Number.parseFloat(value);
+     }) : [0, 0, canvas.clientWidth, canvas.clientHeight];
+     var scaleFactor = 1;
+
+     if (dY > 0 && Math.abs(dY) >= threshold) {
+       if (viewBox[2] / canvas.clientWidth > 0.1) {
+         scaleFactor = .8;
+       }
+       viewBox[2] *= scaleFactor;
+       viewBox[3] *= scaleFactor;
+     } else if (dY < 0 && Math.abs(dY) >= threshold) {
+       if (viewBox[2] / canvas.clientWidth < 8) {
+         scaleFactor = .8;
+       }
+       viewBox[2] /= scaleFactor;
+       viewBox[3] /= scaleFactor;
+     }
+
+     viewBoxRatio = viewBox[2] / canvas.clientWidth;
+     canvas.setAttribute("viewBox", viewBox.join(" "));
      //  console.log(event);
    });
-   var currentProcess, targetProcess;
+   var currentProcess, targetProcess, canvasRect, canvas, viewBoxRatio = 1;
+   $scope.initCanvas = function() {
+     canvas = document.querySelector("#canvas");
+     canvasRect = canvas.getBoundingClientRect();
+   }
    var anchorClicked = false;
    $scope.anchorClick = function($event, process) {
      currentProcess = process;
@@ -19,15 +49,16 @@
      toggleProcessLinedTip();
      $document.on('mousemove', function(moveEvent) {
        $scope.drawingLine = {};
-       //  $scope.drawingLine.d = 'M' + process.position.x + ',' + process.position.y + " l" + (moveEvent.clientX - clickPoint.x) + "," + (moveEvent.clientY - clickPoint.y);
-       document.querySelector("#drawLine").setAttribute('d', 'M' + process.position.x + ',' + (process.position.y + 30) + " l" + (moveEvent.clientX - clickPoint.x) + "," + (moveEvent.clientY - clickPoint.y));
+       //  when zoomed, cannot draw the right cursor position  
+       document.querySelector("#drawLine").setAttribute('d', 'M' + process.position.x + ',' + (process.position.y + 30) + " l" + (moveEvent.clientX - clickPoint.x) * viewBoxRatio + "," + (moveEvent.clientY - clickPoint.y) * viewBoxRatio);
+
+       //  document.querySelector("#drawLine").setAttribute('d', 'M' + process.position.x + ',' + (process.position.y + 30) + " L" + (moveEvent.clientX - canvasRect.x - 2) + "," + (moveEvent.clientY - canvasRect.y - 2));
      });
      $document.on('mousedown', function(moveEvent) {
-       moveEvent.preventDefault();
        $document.off('mousemove');
        $document.off('mousedown');
-
-       if (moveEvent.target.nodeName === "image") {
+       $event.preventDefault();
+       if (anchorClicked) {
          $timeout(function() {
            $scope.lines.push(generateAline(currentProcess.position.x, currentProcess.position.y, targetProcess.position.x, targetProcess.position.y, 30));
            anchorClicked = false;
@@ -35,8 +66,6 @@
          }, 0);
          document.querySelector("#drawLine").setAttribute("d", "");
        }
-
-
      });
 
    }
@@ -46,7 +75,6 @@
        if (process.name === "dis_001") {
          document.querySelector("#" + process.name).classList.add("forbidden-lined");
        }
-
      });
    }
    $scope.lineMouseDown = function($event, line) {
@@ -103,6 +131,9 @@
    $scope.processMouseLeave = function($event, process) {
      targetProcess = undefined;
      document.querySelector("#" + process.name + ">circle").classList.remove("process-heart-beat");
+   }
+   $scope.processClick = function($event, process) {
+
    }
 
    function generateAline(x1, y1, x2, y2, r) {
