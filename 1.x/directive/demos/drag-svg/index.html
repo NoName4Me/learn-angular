@@ -47,18 +47,16 @@
                             <path d="M0,-6 A3,3 0 0,1 0,0 A3,3 0 0,0 0,6" fill="none" stroke="none"></path>
                         </g>
                     </defs>
-
-                    <use x="123" y="111" xlink:href="#source" width="60" ng-dblclick="dblclick"></use>
-                    <use x="123" y="141" xlink:href="#anchor"></use>
                     <g ng-repeat="line in lines" class="line" ng-mousedown="lineMouseDown($event,line)">
                         <path class="true-line" ng-attr-d="{{line.d}}" marker-end="url(#arrow1)" stroke="#666" stroke-width="2px"></path>
                         <path class="padding-line" ng-attr-d="{{line.d}}" fill="none" marker-end="url(#arrow2)"></path>
                     </g>
-                    <g ng-repeat="process in processArr" id="{{process.name}}">
+                    <g tabindex="0" ng-repeat="process in processArr" id="{{process.name}}" ng-keyup="processKeyUp()" ng-keydown="processKeyDown($event,process)">
                         <circle ng-attr-cx="{{process.position.x}}" ng-attr-cy="{{process.position.y}}" r="25" fill="#3A9" stroke="none"></circle>
+                        <circle class="bgc" ng-attr-cx="{{process.position.x}}" ng-attr-cy="{{process.position.y}}" r="40" fill="none" stroke="none"></circle>
                         <image ng-attr-x="{{process.position.x-30}}" ng-attr-y="{{process.position.y-30}}" width="60" xlink:href="" ng-href="{{process.type}}.svg"
                             ng-mousedown="processMouseDown($event,process)" cursor="pointer" ng-mouseenter="processMouseEnter($event,process)"
-                            ng-mouseleave="processMouseLeave($event, process)" ng-click="processClick($event,process)"/>
+                            ng-mouseleave="processMouseLeave($event, process)" ng-click="processClick($event,process)" />
                         <use ng-attr-x="{{process.position.x}}" ng-attr-y="{{process.position.y+30}}" xlink:href="#anchor" ng-click="anchorClick($event, process)"></use>
 
                     </g>

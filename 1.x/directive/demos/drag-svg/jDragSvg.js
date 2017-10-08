@@ -29,7 +29,8 @@
      }
 
      viewBoxRatio = viewBox[2] / canvas.clientWidth;
-     canvas.setAttribute("viewBox", viewBox.join(" "));
+    //  canvas.setAttribute("viewBox", viewBox.join(" "));
+    canvas.style.transform = "scale(.5)";
      //  console.log(event);
    });
    var currentProcess, targetProcess, canvasRect, canvas, viewBoxRatio = 1;
@@ -46,7 +47,7 @@
        x: $event.clientX,
        y: $event.clientY
      };
-     toggleProcessLinedTip();
+     toggleProcessLinedTip(true);
      $document.on('mousemove', function(moveEvent) {
        $scope.drawingLine = {};
        //  when zoomed, cannot draw the right cursor position  
@@ -61,20 +62,34 @@
        if (anchorClicked) {
          $timeout(function() {
            $scope.lines.push(generateAline(currentProcess.position.x, currentProcess.position.y, targetProcess.position.x, targetProcess.position.y, 30));
-           anchorClicked = false;
            currentProcess = undefined;
          }, 0);
+         anchorClicked = false;
          document.querySelector("#drawLine").setAttribute("d", "");
+         toggleProcessLinedTip(false);
        }
      });
 
    }
+   $scope.processKeyDown = function($event, process) {
+     if ($event.keyCode === 8) {
+       var idx;
+       angular.forEach($scope.processArr, function(val, index) {
+         if (val.name === process.name) {
+           idx = index;
+         }
+       });
+       $scope.processArr.splice(idx, 1);
+     }
+   }
 
-   function toggleProcessLinedTip() {
-     angular.forEach($scope.processArr, function(process) {
+   function toggleProcessLinedTip(addOrRemove) {
+     addOrRemove ? angular.forEach($scope.processArr, function(process) {
        if (process.name === "dis_001") {
          document.querySelector("#" + process.name).classList.add("forbidden-lined");
        }
+     }) : angular.forEach($scope.processArr, function(process) {
+       document.querySelector("#" + process.name).classList.remove("forbidden-lined");
      });
    }
    $scope.lineMouseDown = function($event, line) {
@@ -133,7 +148,7 @@
      document.querySelector("#" + process.name + ">circle").classList.remove("process-heart-beat");
    }
    $scope.processClick = function($event, process) {
-
+     document.querySelector("#" + process.name + "> .bgc").classList.add("selected");
    }
 
    function generateAline(x1, y1, x2, y2, r) {

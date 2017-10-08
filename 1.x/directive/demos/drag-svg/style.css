@@ -148,3 +148,11 @@ li {
 .forbidden-lined {
     opacity: .5;
 }
+
+.bgc.selected {
+    fill: #3A9;
+    opacity: .3;
+}
+g:focus{
+    outline: none;
+}
