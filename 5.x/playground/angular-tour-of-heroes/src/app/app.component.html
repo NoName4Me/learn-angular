@@ -1,0 +1,10 @@
+<h1>{{title}}</h1>
+<nav>
+  <a routerLink="/dashboard">Dashboard</a>
+  <a routerLink="/heroes">Heroes</a>
+</nav>
+<!-- AppComponent能直接使用router-outlet
+    因为AppModule引入AppRoutingModule，它暴露了RouterModule
+-->
+<router-outlet></router-outlet>
+<app-messages></app-messages>
