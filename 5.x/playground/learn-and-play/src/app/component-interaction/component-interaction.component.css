@@ -1,0 +1,13 @@
+.seconds {
+    width: 80px;
+    padding: 10px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    font-size: 4em;
+    font: 500 3em Arial;
+    color: red;
+    border: 1px solid #ccc;
+    box-shadow: 12px 8px 8px -4px rgba(0,0,0,.2);
+    border-radius: 20px;
+  }

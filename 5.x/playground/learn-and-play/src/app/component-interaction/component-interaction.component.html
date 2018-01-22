@@ -1,0 +1,35 @@
+<div>
+  <h1># Parent pass data to Child</h1>
+  <h2> ---- 1. by <code>@Input()</code> ---- </h2>
+  <app-ci-child1 *ngFor="let hero of heroes" [hero]="hero" [master]="master">
+  </app-ci-child1>
+
+  <h2> ---- 2. setter/getter ---- </h2>
+  <app-ci-child2 *ngFor="let name of names" [name]="name"></app-ci-child2>
+  
+  <h2> ---- 3. <code>ngOnChange()</code> ---- </h2>
+  <p>Source code version</p>
+  <button (click)="newMinor()">New minor version</button>
+  <button (click)="newMajor()">New major version</button>
+  <app-ci-child3 [major]="major" [minor]="minor"></app-ci-child3>
+  
+  <h1># Parent listen Child event</h1>
+  <h2> ---- 4. by <code>EventEmitter<>()</code> ---- </h2>
+  <h3>Agree: {{agreed}}, Disagree: {{disagreed}}</h3>
+  <!-- onVoted 监听child发出的childEmitVoted -->
+  <app-ci-child4 *ngFor="let voter of voters" [name]="voter" (childEmitVoted)="onVoted($event)">
+  </app-ci-child4>
+  
+  <h2># Parent interacts with child</h2>
+  <h2> ---- 5. Countdown via <i>local variable</i> ---- </h2>
+  <button (click)="timer.start()">Start</button>
+  <button (click)="timer.stop()">Stop</button>
+  <div class="seconds">{{timer.seconds}}</div>
+  <!-- 这个#timer就是局部变量-->
+  <app-ci-child5 #timer></app-ci-child5>
+  <h2> ---- 6. Countdown via <code>@ViewChild()</code> ---- </h2>
+  <button (click)="start()">Start</button>
+  <button (click)="stop()">Stop</button>
+  <div class="seconds">{{ seconds() }}</div>
+  <app-ci-child5></app-ci-child5>
+</div>
