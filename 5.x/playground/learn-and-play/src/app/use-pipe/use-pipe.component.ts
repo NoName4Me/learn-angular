@@ -30,7 +30,6 @@ export class ExponentialStrengthPipe implements PipeTransform {
   }
 }
 
-
 @Component({
   selector: 'power-pow-calculator',
   template: `
