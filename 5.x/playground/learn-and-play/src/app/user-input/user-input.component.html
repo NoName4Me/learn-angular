@@ -1,0 +1,23 @@
+<div>
+  <h4>
+    <li>基本事件</li>
+  </h4>
+  <input (keyup)="onKey($event)">
+  <p>{{values}}</p>
+  <h4>
+    <li>模版变量引用</li>
+  </h4>
+  <p>这里的
+    <code>#box</code>引用就是input这个元素，为了能实时刷新需要绑定事件，比如这里的
+    <code>(keyup)="0"</code>
+  </p>
+  <input #box (keyup)="0">
+  <p>{{box.value}}</p>
+  <h4>事件过滤</h4>
+  <p>为了防止用户在完成输入后忘记按下回车然后点了其它地方，所以增加了blur来保证输入的值更新到数据中</p>
+  <input #newHero (keyup.enter)="addHero(newHero.value)" (blur)="addHero(newHero.value); newHero.value='' ">
+  <button (click)="addHero(newHero.value)">Add</button>
+  <ul>
+    <li *ngFor="let hero of heroes">{{hero}}</li>
+  </ul>
+</div>

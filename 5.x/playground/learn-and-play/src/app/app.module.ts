@@ -10,6 +10,8 @@ import { AdService } from './dynamic-component/ad.service';
 import { AdDirective } from './dynamic-component/ad.directive';
 import { UsePipeComponent, HeroBirthdayComponent, ExponentialStrengthPipe, PowerPowCalculator } from './use-pipe/use-pipe.component';
 import { FormsModule } from '@angular/forms';
+import { UserInputComponent } from './user-input/user-input.component';
+import { HeroFormComponent } from './hero-form/hero-form.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { FormsModule } from '@angular/forms';
     HeroBirthdayComponent,
     PowerPowCalculator,
     ExponentialStrengthPipe,
-    UsePipeComponent
+    UsePipeComponent,
+    UserInputComponent,
+    HeroFormComponent
   ],
   imports: [
     BrowserModule, FormsModule
